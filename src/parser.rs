@@ -51,7 +51,6 @@ pub fn add_tones(str: &str) -> String {
 
     let replace_v_with_umlaut = replace_v_with_umlaut(str);
     let words = divide_into_words(&replace_v_with_umlaut);
-    dbg!(&words);
 
     let mut final_sentence = String::new();
 
