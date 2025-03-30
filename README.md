@@ -1,4 +1,4 @@
-## A CLI app that adds chinese tone marks above pinyin letters
+## A CLI app that adds chinese tone marks above pinyin
 
 #### Example:
 ```console
