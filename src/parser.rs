@@ -4,6 +4,8 @@ use serde_json;
 use regex::Regex;
 use regex_split::*;
 
+// use colored::*;
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Vowel {
     pub vowel: char,
@@ -91,7 +93,7 @@ pub fn add_tones(str: &str) -> String {
 
 pub fn get_syllables(str: &str) -> Vec<String> {
     let re = Regex::new("[0-9]").unwrap();
-    let mut syllables = re
+    let syllables = re
         .split_inclusive(str)
         .collect::<Vec<&str>>()
         .iter()
@@ -110,3 +112,15 @@ pub fn divide_into_words(str: &str) -> Vec<String> {
         .map(|f| f.to_string())
         .collect::<Vec<String>>()
 }
+
+// fn colorize_tone(str: &str, tone: u8) -> ColoredString {
+//     let colored = match tone {
+//         1 => str.red(),
+//         2 => str.yellow(),
+//         3 => str.green(),
+//         4 => str.blue(),
+//         _ => str.normal()
+//     };
+//
+//     colored
+// }
