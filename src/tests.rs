@@ -20,10 +20,10 @@ mod tests {
         let words = ["yue4gong1zhu3", "ya2", "xue3", "zai4jian4"];
         let numbers_removed = ["yuegongzhu", "ya", "xue", "zaijian"];
 
-        let removed1 = remove_numbers(words[0]);
-        let removed2 = remove_numbers(words[1]);
-        let removed3 = remove_numbers(words[2]);
-        let removed4 = remove_numbers(words[3]);
+        let removed1 = remove_numbers(words[0]).unwrap();
+        let removed2 = remove_numbers(words[1]).unwrap();
+        let removed3 = remove_numbers(words[2]).unwrap();
+        let removed4 = remove_numbers(words[3]).unwrap();
         
         assert_eq!(removed1, numbers_removed[0]);
         assert_eq!(removed2, numbers_removed[1]);
@@ -59,7 +59,7 @@ mod tests {
     fn test_get_tone() {
         let words = ["gong1", "ya2", "xue3", "jiao4"];
         for (i, w) in words.iter().enumerate() {
-            let tone = get_tone(w);
+            let tone = get_tone(w).unwrap();
             assert_eq!(tone, (i + 1) as u8);
         }
     }
@@ -86,12 +86,12 @@ mod tests {
         let test5 = "yue4";
         let test6 = "wo3 xi3huan ni3";
 
-        assert_eq!(add_tones(test1).as_str(), "qī");
-        assert_eq!(add_tones(test2).as_str(), "chéng");
-        assert_eq!(add_tones(test3).as_str(), "mǔ");
-        assert_eq!(add_tones(test4).as_str(), "yào");
-        assert_eq!(add_tones(test5).as_str(), "yuè");
-        assert_eq!(add_tones(test6).as_str(), "wǒ xǐhuan nǐ");
+        assert_eq!(add_tones(test1).unwrap().as_str(), "qī");
+        assert_eq!(add_tones(test2).unwrap().as_str(), "chéng");
+        assert_eq!(add_tones(test3).unwrap().as_str(), "mǔ");
+        assert_eq!(add_tones(test4).unwrap().as_str(), "yào");
+        assert_eq!(add_tones(test5).unwrap().as_str(), "yuè");
+        assert_eq!(add_tones(test6).unwrap().as_str(), "wǒ xǐhuan nǐ");
     }
 
 

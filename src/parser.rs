@@ -4,7 +4,9 @@ use serde_json;
 use regex::Regex;
 use regex_split::*;
 
-// use colored::*;
+use colored::*;
+
+use anyhow::Result;
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Vowel {
@@ -16,9 +18,9 @@ pub fn replace_v_with_umlaut(str: &str) -> String {
     str.replace("v", "ü")
 }
 
-pub fn remove_numbers(str: &str) -> String {
-    let re = Regex::new(r"[0-9]").unwrap();
-    re.replace_all(str, "").to_string()
+pub fn remove_numbers(str: &str) -> Result<String> {
+    let re = Regex::new(r"[0-9]")?;
+    Ok(re.replace_all(str, "").to_string())
 }
 
 pub fn check_vowel_priority(str: &str) -> char {
@@ -35,19 +37,23 @@ pub fn check_vowel_priority(str: &str) -> char {
     priority_vowel
 }
 
-pub fn get_tone(str: &str) -> u8 {
-    let last_char = str.chars().last().unwrap();
+pub fn get_tone(str: &str) -> Result<u8> {
+    let last_char = str
+        .chars()
+        .last()
+        .unwrap()
+        .to_string()
+        .parse::<u8>()
+        .unwrap_or(5);
 
-    if last_char.to_string().parse::<u8>().is_ok()
-    && last_char.to_string().parse::<u8>().unwrap() < 5
-        {
-        last_char.to_string().parse::<u8>().unwrap()
+    if last_char > 0 && last_char < 5 {
+        Ok(last_char)
     } else {
-        5
+        Ok(5)
     }
 }
 
-pub fn add_tones(str: &str) -> String {
+pub fn add_tones(str: &str) -> Result<String> {
     let json_file = include_str!("../vowel.json");
     let vowels: Vec::<Vowel> = serde_json::from_str(&json_file).unwrap();
 
@@ -63,7 +69,7 @@ pub fn add_tones(str: &str) -> String {
         for s in syllables {
             let priority_vowel = check_vowel_priority(&s);
             let correct_vowel = vowels.iter().find(|v| v.vowel == priority_vowel).unwrap();
-            let tone = get_tone(&s);
+            let tone = get_tone(&s)?;
             
             if tone > 0 && tone < 5 {
                 let with_tone = s.replace(
@@ -77,14 +83,10 @@ pub fn add_tones(str: &str) -> String {
         }
 
         let separator =
-            if i == words.len() - 1 {
-                "".to_string()
-            } else {
-                " ".to_string()
-            };
+            if i == words.len() - 1 { "".to_string() } else { " ".to_string() };
 
         final_sentence.push_str(
-            &format!("{}{}", &final_word, separator)
+            &format!("{final_word}{separator}")
         );
     }
 
@@ -93,15 +95,13 @@ pub fn add_tones(str: &str) -> String {
 
 pub fn get_syllables(str: &str) -> Vec<String> {
     let re = Regex::new("[0-9]").unwrap();
-    let syllables = re
+    re
         .split_inclusive(str)
         .collect::<Vec<&str>>()
         .iter()
         .map(|f| f.to_string())
         .filter(|p| !p.is_empty())
-        .collect::<Vec<String>>();
-    // syllables.truncate(syllables.len() - 1);
-    syllables
+        .collect::<Vec<String>>()
 }
 
 pub fn divide_into_words(str: &str) -> Vec<String> {
@@ -113,14 +113,12 @@ pub fn divide_into_words(str: &str) -> Vec<String> {
         .collect::<Vec<String>>()
 }
 
-// fn colorize_tone(str: &str, tone: u8) -> ColoredString {
-//     let colored = match tone {
-//         1 => str.red(),
-//         2 => str.yellow(),
-//         3 => str.green(),
-//         4 => str.blue(),
-//         _ => str.normal()
-//     };
-//
-//     colored
-// }
+fn colorize_tone(str: &str, tone: u8) -> ColoredString {
+    match tone {
+        1 => str.red(),
+        2 => str.yellow(),
+        3 => str.green(),
+        4 => str.blue(),
+        _ => str.normal()
+    }
+}
