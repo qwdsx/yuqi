@@ -5,7 +5,6 @@ use anyhow::Result;
 
 mod tests;
 mod parser;
-mod error;
 
 #[derive(Debug, Deserialize, Serialize)]
 struct Note {
