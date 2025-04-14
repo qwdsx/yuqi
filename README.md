@@ -1,6 +1,6 @@
 ## A CLI tool that adds Chinese tone marks above pinyin
 
-I created this tool so that I could add chinese tone marks to Anki flashcards. It also replaces 'v' with 'ü'.
+This tool also replaces 'v' with 'ü'.
 
 #### Example:
 ```console
